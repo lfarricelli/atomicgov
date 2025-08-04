@@ -1,0 +1,818 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/papaparse.min.js"></script>
+    <title>Reati</title>
+    <script async="" src="js/adsbygoogle.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #073763;
+            color: #F1C232;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            color: black;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Mantiene la header sopra agli altri elementi */
+    background-color: #003366;
+    color: white;
+    padding: 10px 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.tieni-su {
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Mantiene il contenitore sopra gli altri elementi */
+    background-color: #003366; /* Colore dello sfondo del contenitore */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Ombra per effetto visivo */
+}
+
+.table-container {
+    max-height: 400px; /* Altezza massima della tabella scrollabile */
+    overflow-y: auto; /* Scroll verticale */
+    border: 1px solid #ccc; /* Opzionale: bordo per evidenziare la tabella */
+}
+
+@media (max-width: 768px) {
+    .table-container {
+        max-height: 300px; /* Riduci l'altezza per dispositivi più piccoli (come tablet o schermi da 24") */
+    }
+}
+
+@media (max-width: 480px) {
+    .table-container {
+        max-height: 250px; /* Ancora più piccola per schermi di smartphone */
+    }
+}
+
+@media (min-width: 1200px) {
+    .table-container {
+        max-height: 500px; /* Aumenta l'altezza per schermi più grandi (27"-32") */
+    }
+}
+
+@media (min-width: 1600px) {
+    .table-container {
+        max-height: 600px; /* Ancora più grande per schermi di 32" */
+    }
+}
+
+table {
+    width: 100%; /* Per riempire il contenitore */
+    border-collapse: collapse; /* Per rimuovere spazi tra bordi */
+}
+
+thead th {
+    position: sticky; /* Mantiene fissa l'intestazione */
+    top: 0; /* Posizione in alto */
+    background-color: #f8f8f8; /* Colore di sfondo per contrasto */
+    z-index: 1; /* Per essere sopra il contenuto scrollabile */
+            background-color: #073763;
+            color: #F1C232;
+}
+
+tbody td, thead th {
+    border: 1px solid #ddd; /* Bordo delle celle */
+    padding: 8px; /* Spaziatura interna */
+    text-align: left; /* Allineamento del testo */
+}
+
+        th {
+            background-color: #073763;
+            color: #F1C232;
+        }
+
+        .search-bar {
+            background-color: #1C4587;
+            color: #F1C232;
+        }
+        .resoconto {
+            margin-top: 10px;
+        }
+
+        .resoconto {
+            display: grid;
+            grid-template-columns: 0.5fr 0.5fr; /* Due colonne di uguale larghezza */
+            gap: 10px; /* Spaziatura tra le colonne */
+            padding: 10px; /* Spaziatura interna */
+            border-radius: 8px; /* Angoli arrotondati */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Leggera ombra */
+        }
+
+        .resoconto p {
+            margin: 0; /* Rimuove il margine */
+            text-align: center; /* Allinea il testo al centro */
+            padding: 10px; /* Spaziatura interna */
+            background-color: #eaeaea; /* Sfondo grigio per ogni riga */
+            border-radius: 4px; /* Angoli leggermente arrotondati */
+            font-weight: bold; /* Testo in grassetto */
+            background-color: #1C4587;
+        }
+
+        .resoconto span {
+            color: #555; /* Colore del testo del valore */
+            font-weight: normal; /* Valori non in grassetto */
+            color: #F1C232;
+        }
+
+        .title-piccolo {
+            color: #555; /* Colore del testo del valore */
+            font-weight: normal; /* Valori non in grassetto */
+            color: #F1C232;
+        }
+
+        .header {
+    background-color: #003366;
+    color: white;
+    padding: 5px 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Centro il contenuto */
+}
+
+.logo-and-title {
+    display: flex;
+    align-items: center; /* Allinea verticalmente logo e titolo */
+    justify-content: center;
+    gap: 10px; /* Spaziatura tra logo e titolo */
+}
+
+.header img {
+    height: 90px; /* Dimensione del logo */
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.title-piccolo {
+    margin-top: 5px; /* Spazio sopra la scritta */
+    font-size: 14px;
+}
+
+.developed-by {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.developed-by a {
+    text-decoration: none;
+    color: #F1C232;
+    font-size: 15px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.developed-by img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%; /* Per un aspetto arrotondato */
+    background-color: #5865F2; /* Colore del logo Discord */
+    padding: 2px;
+}
+
+.developed-by a:hover {
+    color: #5865F2;
+}   
+
+.smussato {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 12px; /* Bordi smussati */
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: 10px;
+}
+
+.smussato:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* Leggera animazione al passaggio del mouse */
+}
+
+.smussato:active {
+    background-color: #003d80;
+    transform: scale(0.95); /* Effetto clic */
+}
+
+
+.tools-container {
+    display: flex;
+    align-items: center; /* Allinea verticalmente gli elementi */
+    gap: 10px; /* Spaziatura tra gli elementi */
+    flex-wrap: wrap; /* Permette agli elementi di andare a capo se lo spazio è insufficiente */ 
+}
+
+.tools-container input[type="text"] {
+    flex: 1; /* Permette alla barra di ricerca di occupare più spazio */
+    max-width: 1000px; /* Mantiene il limite massimo */
+    padding: 10px;
+    font-size: 16px;
+}
+
+.smussato {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.smussato:hover {
+    background-color: #0056b3;
+}
+
+label {
+    font-size: 16px;
+    display: flex;
+    align-items: center; /* Centra la checkbox con il testo */
+    gap: 5px;
+}
+
+
+/* Stile per l'overlay (sfondo oscurato) */
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Sfondo semitrasparente */
+    z-index: 999; /* Sopra alla maggior parte degli elementi */
+    display: none; /* Nascondi inizialmente */
+}
+
+/* Stile per il popup */
+#popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #073763;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Sopra all'overlay */
+    display: none; /* Nascondi inizialmente */
+    width: 600px; /* Dimensioni */
+    text-align: center;
+}
+
+.disclaimer {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    color: #bbbbbb; /* Grigio tenue */
+    font-size: 15px;
+    max-width: 300px;
+    z-index: 10;
+    font-family: Arial, sans-serif;
+}
+
+.tooltip {
+    cursor: pointer;
+    margin-left: 5px;
+    font-weight: bold;
+    color: white;
+    position: relative;
+}
+
+.tooltip::after {
+    content: attr(data-tooltip);
+    visibility: hidden;
+    opacity: 0;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    z-index: 1;
+    transition: opacity 0.2s, visibility 0.2s;
+    font-size: 12px;
+}
+
+.tooltip:hover::after {
+    visibility: visible;
+    opacity: 1;
+}
+    </style>
+</head>
+<body>
+
+    <div class="tieni-su">
+        <div class="header">
+        <div class="disclaimer">
+    This site is an unofficial project inspired by the FBI/Government Authority, created for entertainment purposes related to FiveM RolePlay of server atomicrevolution.it. 
+    It is not affiliated with or endorsed by the FBI or any government authority.
+        </div>
+            <div class="logo-and-title">
+                <img src="images/logo.png" alt="Governo Logo">
+                <h1>DIP. DI GIUSTIZIA DI ATOMIC</h1>
+            </div>
+        <p class="title-piccolo">Ufficio Governativo Atomic</p>
+        <div class="developed-by">
+            <a href="https://e-z.bio/lfarricelli" target="_blank">
+                <span>Developed by lrzUCC_</span>
+            </a>
+        </div>
+        </div>
+        <center>
+            <!--<h1>Elenco dei Reati</h1>
+             <input type="file" id="fileInput" accept=".csv" /> 
+            <h2 class="reati-selezionati">Reati Selezionati:</h2>
+            <ul id="selected-list">
+                 Elenco reati selezionati 
+            </ul>-->
+        </center>
+        <div class="resoconto">
+            <p>Fattura Minima: <span id="min-fattura">Nessun Valore</span></p>
+            <p>Fattura Massima: <span id="max-fattura">Nessun Valore</span></p>
+            <p>Mesi Minimi: <span id="min-mesi">Nessun Valore</span></p>
+            <p>Mesi Massimi: <span id="max-mesi">Nessun Valore</span></p>
+        </div>
+        <!-- <input type="text" id="search-bar" class="search-bar" placeholder="Cerca reato..." 
+           style="width: 100%; max-width: 1000px; padding: 10px; margin: 20px auto 20px; font-size: 16px; display: block;">
+           <button id="reload-button" class="smussato">Reset Campi</button>
+        <input type="checkbox" id="show-selected" /> Mostra solo selezionati -->
+
+
+        <div class="tools-container">
+            <input type="text" id="search-bar" class="search-bar" placeholder="Cerca reato...">
+            <div style="display: inline-block; position: relative;">
+                <button onclick="copiaInClipboard()" class="smussato">Copia negli appunti</button>
+                <span class="tooltip" data-tooltip="Copia tutti i reati selezionati per incollarli su Discord sul modulo Arresto">?</span>
+            </div>
+            <button id="reload-button" class="smussato">Reset Campi</button>
+            <label>
+                <input type="checkbox" id="show-selected"> Mostra solo selezionati
+            </label>
+        </div>
+
+    </div>
+        <div class="table-container">
+            <table id="tabella">
+                <thead>
+                    <tr>
+                        <th>Seleziona</th>
+                        <th>Art</th>
+                        <th>Nome Reato (Click sul reato per più info)</th>
+                        <th>Fattura</th>
+                        <th>Mesi di Carcere</th>
+                        <th>Procedura</th>
+                    </tr>
+                </thead>
+      
+                <tbody id="data-table">
+                    <!-- Dati caricati dinamicamente -->
+                </tbody>
+            </table>
+        </div>
+
+
+
+        <div class="overlay" id="overlay"></div>
+        <div id="popup" class="popup">
+            <p><strong>Reato:</strong> <span id="popup-reato"></span></p>
+            <p><strong>Configurazione:</strong> <span id="popup-procedura"></span></p>
+            <div class="close-btn">
+                <button class="smussato" onclick="closePopup()">Chiudi</button>
+            </div>
+        </div>
+
+    <script>
+
+        fetch('contatore.php')
+        .then(response => response.text())
+        .then(data => {
+            console.log("aaa");
+        })
+        .catch(error => console.error('Errore:', error));
+
+
+        document.getElementById("reload-button").addEventListener("click", function () {
+            location.reload(); // Ricarica la pagina
+        });
+
+
+
+        let maxFattura = 0, minFattura = 0;
+        let maxMesi = 0, minMesi = 0;
+
+
+
+        document.getElementById("show-selected").addEventListener("change", function() {
+            filterSelectedRows();
+        });
+
+        function filterSelectedRows() {
+    const showSelected = document.getElementById("show-selected").checked;
+    const rows = document.querySelectorAll("#data-table tr");
+
+    rows.forEach(row => {
+        const checkbox = row.querySelector("input[type='checkbox']");
+        const nonSelezionabile = row.innerText.includes("Processo");
+
+        if (showSelected) {
+            // Se il filtro è attivo
+            if (nonSelezionabile) {
+                // Nascondi righe con "Processo"
+                row.style.display = "none";
+            } else if (checkbox && !checkbox.checked) {
+                // Nascondi righe non selezionate
+                row.style.display = "none";
+            } else {
+                // Mostra righe selezionate
+                row.style.display = "";
+            }
+        } else {
+            // Ripristina tutte le righe quando il filtro è disattivato
+            row.style.display = "";
+        }
+    });
+}
+
+
+
+            // Funzione per gestire la selezione delle righe
+            function updateSelection() {
+                const selectedRows = [];
+                document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                    const rowIndex = checkbox.getAttribute("data-row");
+                    selectedRows.push(rowIndex);
+                });
+            }
+
+
+
+
+
+
+
+
+        const googleSheetCSV = "https://docs.google.com/spreadsheets/d/1BX3RLeKJLt8gL-nCCW0Q3JcrPDB459Ro-xn6CdreUvQ/export?format=csv";
+
+        // Esegui il download del file CSV
+        fetch(googleSheetCSV)
+            .then(response => response.text())
+            .then(csvText => {
+                processCSV(csvText); // Chiamata alla tua funzione per gestire il CSV
+            })
+            .catch(error => {
+                alert("Errore nel download del file:", error);
+            });
+
+/*
+
+        document.getElementById("fileInput").addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                alert("Seleziona un file!");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const csvText = e.target.result;
+                processCSV(csvText);
+            };
+            reader.readAsText(file);
+        });*/
+
+        function processCSV(csvText) {
+    const tableBody = document.getElementById("data-table");
+    tableBody.innerHTML = ""; // Pulisce la tabella prima di riempirla
+
+    Papa.parse(csvText, {
+        header: false, // Disabilita l'intestazione automatica
+        skipEmptyLines: true, // Ignora righe vuote
+        complete: function(results) {
+            const rows = results.data;
+            let displayedIndex = 0;
+
+            rows.slice(1).forEach(row => {
+                if (row[0].startsWith("Art") && row[0] != "Articoli") {
+                    const tr = document.createElement("tr");
+                    // Aggiungi attributi data-reato e data-procedura
+                    tr.setAttribute("data-reato", row[2] || '-');
+                    tr.setAttribute("data-procedura", row[6] || 'Nessuna Descrizione');
+                    if (row[3] === "Stimata dal Giudice") {
+                        tr.innerHTML = `
+                            <td>Processo</td>
+                            <td>${row[0] || '-'}</td>
+                            <td class="clickable-column">${row[2] || '-'}</td>
+                            <td>${row[3] || '-'}</td>
+                            <td>${row[4] || '-'}</td>
+                            <td>${row[5] || '-'}</td>
+                        `;
+                    } else {
+                        tr.innerHTML = `
+                            <td><input type="checkbox" data-row="${displayedIndex}"></td>
+                            <td>${row[0] || '-'}</td>
+                            <td class="clickable-column">${row[2] || '-'}</td>
+                            <td>${row[3] || '-'}</td>
+                            <td>${row[4] || '-'}</td>
+                            <td>${row[5] || '-'}</td>
+                        `;
+                    }
+                    tableBody.appendChild(tr);
+                    displayedIndex++;
+                }
+            });
+        }
+    });
+
+
+
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function(event) {
+                    // Se il checkbox ha id "show-selected", non eseguire updateSelection
+                    console.log("ok");
+                    if (event.target.id === "show-selected") {
+                        return;
+                    }
+                    console.log("ok2");
+                    updateSelection();
+                });
+            });
+
+        }
+
+        function updateSelection() {
+            const selectedRows = [];
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                const rowIndex = checkbox.getAttribute("data-row");
+                if(rowIndex != null){
+                    selectedRows.push(rowIndex);
+                }
+            });
+
+            updateSelectedList(selectedRows);
+            updateResoconto(selectedRows);
+        }
+
+        // Funzione per aggiornare la lista selezionata e concatenare i reati
+        function updateSelectedList(selectedRows) {
+            let reatiConcatenati = ""; // Variabile per concatenare i nomi dei reati
+            
+            selectedRows.forEach(index => {
+                const row = document.querySelectorAll("#data-table tr")[index];
+                const reato = row.cells[2].innerText; // Nome del reato
+                reatiConcatenati += reato + ", ";
+            });
+
+            // Rimuove l'ultima virgola e spazio
+            reatiConcatenati = reatiConcatenati.slice(0, -2);
+
+            // Salva il risultato nella variabile globale per l'accesso dal pulsante
+            window.reatiConcatenati = reatiConcatenati;
+
+
+            // Aggiorna l'interfaccia utente per mostrare il risultato (opzionale)
+            //const list = document.getElementById("selected-list");
+            //list.innerText = reatiConcatenati;
+        }
+
+        // Funzione per copiare il testo negli appunti
+        function copiaInClipboard() {
+            if (window.reatiConcatenati) {
+                // Crea un elemento textarea nascosto
+                const textarea = document.createElement("textarea");
+                textarea.value = window.reatiConcatenati; // Imposta il testo da copiare
+                document.body.appendChild(textarea); // Aggiungi il textarea al DOM
+                textarea.select(); // Seleziona il contenuto del textarea
+                try {
+                    // Esegui il comando copia
+                    document.execCommand("copy");
+                    alert("Testo copiato negli appunti!");
+                } catch (err) {
+                    alert("Errore nella copia: " + err);
+                }
+                document.body.removeChild(textarea); // Rimuovi il textarea dal DOM
+            } else {
+                alert("Nessun reato selezionato da copiare.");
+            }
+        }
+
+
+
+        function updateResoconto(selectedRows) {
+            // Reset dei totali prima di ricalcolarli
+            maxFattura = 0;
+            minFattura = 0;
+            maxMesi = 0;
+            minMesi = 0;
+
+            // Calcola i nuovi totali
+            selectedRows.forEach(index => {
+                const row = document.querySelectorAll("#data-table tr")[index];
+                const fatturaRange = row.cells[3].innerText.match(/(\d+(\.\d+)?)/g); // Cerca numeri con punto opzionale
+                const mesiRange = row.cells[4].innerText.match(/(\d+(\.\d+)?)/g); // Cerca numeri con punto opzionale
+
+            
+                if (fatturaRange) { 
+                    if(fatturaRange.length == 1){
+                        minFattura += parseInt(fatturaRange[0], 10);
+                        maxFattura += parseInt(fatturaRange[0], 10);
+                    }else{
+                    const fatturaMin = parseInt(fatturaRange[0], 10);
+                    const fatturaMax = parseInt(fatturaRange[1], 10);
+                    minFattura += fatturaMin;
+                    maxFattura += fatturaMax;
+                    }
+                }
+
+
+                if (mesiRange) {
+                    if(mesiRange.length == 1){
+                        minMesi += parseInt(mesiRange[0], 10);
+                        maxMesi += parseInt(mesiRange[0], 10);
+                    }else{
+                        const mesiMin = parseInt(mesiRange[0], 10);
+                        const mesiMax = parseInt(mesiRange[1], 10);
+                        minMesi += mesiMin;
+                        maxMesi += mesiMax;
+                    }
+                    if(maxMesi >= 40){
+                        maxMesi = 40;
+                    }
+                    if(minMesi >= 40){
+                        minMesi = 40;
+                    }
+                }
+            });
+
+            // Aggiorna i campi del resoconto
+            document.getElementById("max-fattura").innerText = maxFattura === 0 ? 'Nessun Valore' : `$${formatNumber(maxFattura)}`;
+            document.getElementById("min-fattura").innerText = minFattura === 0 ? 'Nessun Valore' : `$${formatNumber(minFattura)}`;
+
+            // Aggiorna i campi del resoconto
+            document.getElementById("max-mesi").innerText = maxMesi === 0 ? 'Nessun Valore' : `${maxMesi} mesi`;
+            document.getElementById("min-mesi").innerText = minMesi === 0 ? 'Nessun Valore' : `${minMesi} mesi`;
+        }
+
+        function formatNumber(value) {
+            // Converte il numero in formato stringa con separatori di migliaia
+            return (value * 1000).toLocaleString('it-IT').replace(/\./g, "'");
+        }       
+
+        function convertiValore($valore) {
+            // Rimuovi eventuali spazi
+            $valore = trim($valore);
+
+            // Verifica se il valore termina con "k" o "K"
+            if (str_ends_with(strtolower($valore), 'k')) {
+                // Rimuove il suffisso "k" e converte in numero
+                $numero = floatval(rtrim($valore, 'kK')) * 1000;
+                return number_format($numero, 0, '', '.'); // Formatta il numero (es: 10.000)
+            }
+
+            // Se non ha "k", restituisci il valore originale
+            return $valore;
+        }
+
+
+        document.getElementById("search-bar").addEventListener("input", function () {
+    const searchTerms = this.value.toLowerCase().split(/\s+/); // Divide l'input in parole chiave
+    const rows = document.querySelectorAll("#data-table tr");
+
+    rows.forEach(row => {
+        const column1 = row.cells[1]?.innerText.toLowerCase(); // Contenuto colonna 1
+        const column2 = row.cells[2]?.innerText.toLowerCase(); // Contenuto colonna 2
+        if (column1 || column2) {
+            // Combina i valori delle colonne per la ricerca
+            const combinedText = `${column1 || ""} ${column2 || ""}`;
+            // Verifica che ogni termine di ricerca sia incluso nel testo combinato
+            const matchesAllTerms = searchTerms.every(term => combinedText.includes(term));
+            row.style.display = matchesAllTerms ? "" : "none"; // Mostra o nasconde la riga
+        } else {
+            row.style.display = "none"; // Nasconde righe senza dati
+        }
+    });
+});
+
+
+
+
+
+
+        // Aggiungi la funzione per sottrarre quando la casella viene deselezionata
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            if(checkbox.id != "show-selected"){
+            checkbox.addEventListener('change', function() {
+                const rowIndex = this.getAttribute("data-row");
+                const row = document.querySelectorAll("#data-table tr")[rowIndex];
+                const fatturaRange = row.cells[3].innerText.match(/(\d+(\.\d+)?)/g);
+                const mesiRange = row.cells[4].innerText.match(/(\d+(\.\d+)?)/g);
+
+                if (this.checked) {
+                    // Aggiungi i valori
+                    if (fatturaRange) {
+                        const fatturaMax = parseInt(fatturaRange[1].replace(/\./g, ''), 10);
+                        const fatturaMin = parseInt(fatturaRange[0].replace(/\./g, ''), 10);
+                        maxFattura += fatturaMax;
+                        minFattura += fatturaMin;
+                    }
+
+                    if (mesiRange) {
+                        const mesiMax = parseInt(mesiRange[1], 10);
+                        const mesiMin = parseInt(mesiRange[0], 10);
+                        maxMesi += mesiMax;
+                        minMesi += mesiMin;
+                    }
+                } else {
+                    // Sottrai i valori
+                    if (fatturaRange) {
+                        const fatturaMax = parseInt(fatturaRange[1].replace(/\./g, ''), 10);
+                        const fatturaMin = parseInt(fatturaRange[0].replace(/\./g, ''), 10);
+                        maxFattura -= fatturaMax;
+                        minFattura -= fatturaMin;
+                    }
+
+                    if (mesiRange) {
+                        const mesiMax = parseInt(mesiRange[1], 10);
+                        const mesiMin = parseInt(mesiRange[0], 10);
+                        maxMesi -= mesiMax;
+                        minMesi -= mesiMin;
+                    }
+                }
+
+                // Ricalcola i totali
+                updateResoconto([...document.querySelectorAll('input[type="checkbox"]:checked')].map(checkbox => checkbox.getAttribute("data-row")));
+            });
+
+            }
+        });
+
+
+        function showPopup(reato, procedura) {
+            document.getElementById("popup-reato").innerText = reato;
+            document.getElementById("popup-procedura").innerText = procedura;
+            document.getElementById("popup").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        // Funzione per chiudere il popup
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+
+        // Usa delegazione eventi sul contenitore del tbody
+        document.querySelector("#tabella").addEventListener("click", (event) => {
+            const cell = event.target.closest("td"); // La cella cliccata
+            const row = event.target.closest("tr");
+
+            if (event.target.type === "checkbox"  || event.target.closest("th")) return; // Se è una checkbox, esci dalla funzione
+
+
+            if (!row || !cell || !cell.classList.contains("clickable-column")) return;
+
+            const reato = row.dataset.reato;
+            const procedura = row.dataset.procedura;
+
+            console.log(reato);
+            console.log(procedura);
+            showPopup(reato, procedura);
+        });
+
+
+        // Aggiunge un evento per chiudere il popup cliccando fuori
+        document.getElementById("overlay").addEventListener("click", closePopup);
+
+
+    </script>
+
+
+</body></html>
